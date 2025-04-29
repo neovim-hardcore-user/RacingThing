@@ -1,0 +1,13 @@
+#BlueJ class context
+comment0.target=BvhNode
+comment1.params=list\ maxDepth
+comment1.target=BvhNode(java.util.List,\ int)
+comment2.params=t\ axis
+comment2.target=double\ centroid(javafx.geometry.Point3D[],\ int)
+comment3.params=
+comment3.target=int\ longestAxis()
+comment4.params=tri
+comment4.target=void\ expandByTriangle(javafx.geometry.Point3D[])
+comment5.params=s\ r
+comment5.target=boolean\ AABBSphereTest(javafx.geometry.Point3D,\ double)
+numComments=6

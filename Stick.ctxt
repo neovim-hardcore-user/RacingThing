@@ -1,0 +1,7 @@
+#BlueJ class context
+comment0.target=Stick
+comment1.params=a\ b
+comment1.target=Stick(CollisionSphere,\ CollisionSphere)
+comment2.params=
+comment2.target=void\ constrain()
+numComments=3

@@ -1,0 +1,13 @@
+#BlueJ class context
+comment0.target=CollisionSphere
+comment1.params=initialPos\ radius
+comment1.target=CollisionSphere(javafx.geometry.Point3D,\ double)
+comment2.params=force
+comment2.target=void\ applyForce(javafx.geometry.Point3D)
+comment3.params=
+comment3.target=void\ verlet()
+comment4.params=node
+comment4.target=void\ collideMeshBVH(BvhNode)
+comment5.params=p\ a\ b\ c
+comment5.target=javafx.geometry.Point3D\ closestPointOnTriangle(javafx.geometry.Point3D,\ javafx.geometry.Point3D,\ javafx.geometry.Point3D,\ javafx.geometry.Point3D)
+numComments=6
