@@ -29,29 +29,23 @@ public class Main extends Application {
         AmbientLight ambient = new AmbientLight(Color.color(0.1, 0.1, 0.1));
         world.getChildren().add(ambient);
 
-        // --- Funky animated lights setup ---
         Group lightGroup = new Group();
 
-        // Create three colored point lights
         PointLight redLight   = new PointLight(Color.color(0.3, 0, 0));
         PointLight greenLight = new PointLight(Color.color(0, 0.3, 0));
         PointLight blueLight  = new PointLight(Color.color(0, 0, 0.3));
 
 
-        // Add them to a container so we can animate them together
         lightGroup.getChildren().addAll(redLight, greenLight, blueLight);
 
-        // Add to your scene root:
         world.getChildren().add(lightGroup);
 
-        // AnimationTimer for swirling motion and color cycling
         new AnimationTimer() {
             private final long startNano = System.nanoTime();
             @Override
             public void handle(long now) {
                 double t = (now - startNano) / 1e9;
 
-                // Swirl positions in offset orbits
                 redLight.setTranslateX(300 * Math.cos(t));
                 redLight.setTranslateY(-500);
                 redLight.setTranslateZ(300 * Math.sin(t));

@@ -30,14 +30,11 @@ public class Car {
                String wheelObjPath,
                int bvhLeafThreshold,
                Group world) throws IOException {
-        // Load visual chassis mesh
         chassisMesh = new Mesh(chassisObjPath);
         world.getChildren().add(chassisMesh);
-
-        // Build collision BVH
+        
         collisionMesh = new CollisionMesh(collisionObjPath, bvhLeafThreshold);
 
-        // Read collision data
         List<double[]> vertexData = new ArrayList<>();
         List<int[]> connections = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(collisionDataPath))) {
@@ -62,7 +59,7 @@ public class Car {
             }
         }
 
-        // Create CollisionSpheres and compute initial center
+
         List<CollisionSphere> spheres = new ArrayList<>();
         Point3D sum = new Point3D(0,0,0);
         for (double[] v : vertexData) {
@@ -74,14 +71,13 @@ public class Car {
         }
         initialCenter = sum.multiply(1.0 / spheres.size());
 
-        // Record initial offsets
         
         initialOffsets = new ArrayList<>();
         for (CollisionSphere cs : spheres) {
             initialOffsets.add(cs.pos.subtract(sum).add(new Point3D(0, 0, 0)));
         }
 
-        // Visualize spheres
+
         for (CollisionSphere cs : spheres) {
             Sphere view = new Sphere(cs.radius);
             PhongMaterial mat = new PhongMaterial(Color.RED);
@@ -92,7 +88,7 @@ public class Car {
         }
         chassisCollision = spheres.toArray(new CollisionSphere[0]);
 
-        // Build sticks
+
         for (int[] c : connections) {
             sticks.add(new Stick(
                 spheres.get(c[0]), spheres.get(c[1])
@@ -101,19 +97,18 @@ public class Car {
     }
 
     public void update() {
-        // Physics: apply small upward 'gravity', verlet, constraints, collisions
         for (CollisionSphere s : chassisCollision) {
             s.applyForce(new Point3D(0, 0.0001, 0));
             s.verlet();
             s.collideMeshBVH(collisionMesh.getBvhRoot());
         }
         Random rng = new Random();
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 200; i++) {
             Collections.shuffle(sticks, rng);
             for (Stick stick : sticks) stick.constrain();
         }
 
-        // Compute current center and offsets
+
         Point3D sum = new Point3D(0,0,0);
         List<Point3D> currentOffsets = new ArrayList<>();
         for (CollisionSphere s : chassisCollision) {
@@ -124,9 +119,8 @@ public class Car {
             currentOffsets.add(s.pos.subtract(currentCenter));
         }
 
-        // Compute optimal rotation quaternion
         double[] quat = computeKabschQuaternion(initialOffsets, currentOffsets);
-        // Quaternion -> axis-angle
+        
         double w = quat[0], x = quat[1], y = quat[2], z = quat[3];
         double angle = 2 * Math.acos(w);
         double s = Math.sqrt(1 - w*w);
@@ -134,7 +128,7 @@ public class Car {
             ? new Point3D(1,0,0)
             : new Point3D(x/s, y/s, z/s);
 
-        // Apply mesh transforms: rotate around initialCenter, then translate to currentCenter
+
         chassisMesh.getTransforms().clear();
         Rotate rot = new Rotate(
             Math.toDegrees(angle),
@@ -150,7 +144,7 @@ public class Car {
         );
         chassisMesh.getTransforms().addAll(rot, tr);
 
-        // Update sphere visuals
+
         for (int i = 0; i < sphereViews.size(); i++) {
             Sphere v = sphereViews.get(i);
             Point3D p = chassisCollision[i].pos;
